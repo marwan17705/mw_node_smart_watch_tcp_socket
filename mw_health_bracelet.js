@@ -2,14 +2,9 @@
 const Net = require('net');
 const EventEmitter = require('events');
 const APXX_format = require('./submodule/APXX_format')
-// The port on which the server is listening.
-// const port = 8080;
 
-// Use net.createServer() in your code. This is just for illustration purpose.
-// Create a new TCP server.
-// server = new Net.Server();
 
-//flow connection ต้องเช็คในฐาน ข้อมูล
+//IWAP00353456789012345
 var APXX = new APXX_format();
 
 
@@ -25,9 +20,9 @@ class mw_health_bracelet extends EventEmitter {
             var ip_server = this.server ? this.server.address() : "server";
             console.log(`Server listening for connection requests on socket ${ip_server}:${port}`);
         });
-        var client_list_info = []
+        this.client_list_info = []
 
-        this.server.on('connection', (socket) => this.tcp_scoket_server(socket, client_list_info));
+        this.server.on('connection', (socket) => this.tcp_scoket_server(socket, this.client_list_info));
     }
 
     get_client_list() {
@@ -58,44 +53,105 @@ class mw_health_bracelet extends EventEmitter {
             // console.log(type);
             switch (type) {
                 case "AP00":
-                    self.AP00_process(raw_payload, socket, client_list_info);
+                    var raw_IMEI = await self.AP00_process(raw_payload, socket, client_list_info);
+                    await self.tcp_reply_AP00(socket)
+                    await self.start_monitor_heartrate(raw_IMEI);
                     break;
                 case "AP01":
                     var data_formated = await APXX.C2json_AP01(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply(type, socket);
                     break;
 
                 case "AP03":
                     var data_formated = await APXX.C2json_AP03(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply(type, socket);
                     break;
 
                 case "AP10":
                     var data_formated = await APXX.C2json_AP10(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply_AP10(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply_AP10(type, socket);
                     break;
 
                 case "AP50":
                     var data_formated = await APXX.C2json_AP50(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply(type, socket);
                     break;
 
                 case "APHP":
                     var data_formated = await APXX.C2json_APHP(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply(type, socket);
                     break;
 
                 case "APHT":
                     var data_formated = await APXX.C2json_APHT(raw_payload);
-                    self.emit("data", { type: type, payload: data_formated});                    
-                    self.tcp_reply(type, socket);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.tcp_reply(type, socket);
                     break;
-                    
+                case "APXL":
+                    var data_formated = await APXX.C2json_APXL(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
+                case "APXZ":
+                    var data_formated = await APXX.C2json_APXZ(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
+                case "APXT":
+                    var data_formated = await APXX.C2json_APXT(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
+                case "AP12":
+                    var data_formated = await APXX.C2json_AP12(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
+                case "AP14":
+                    var data_formated = await APXX.C2json_AP14(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
+                case "AP33":
+                    var data_formated = await APXX.C2json_AP33(raw_payload);
+                    var client_index = await self.find_socket_index(socket);
+                    if (client_index === -1)
+                        break;
+                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    break;
                 default:
                     // var data_formated = location_update_to_json(array_payload);
                     // var callback_data = data_to_callback(array_header);                   
@@ -115,8 +171,7 @@ class mw_health_bracelet extends EventEmitter {
             var objIndex = await client_list_info.findIndex(x => (x.remote_client.remoteAddress === socket.remoteAddress
                 && x.remote_client.remotePort === socket.remotePort));
             // var result_port = client_list_info.filter(x => x.socket.remotePort === port);
-            if (objIndex != -1)
-            {
+            if (objIndex != -1) {
                 if (client_list_info[objIndex].IMEI !== "") {
                     //emit disconnect
                     self.emit("disconnect", { type: "disconnect", IMEI: client_list_info[objIndex].IMEI });
@@ -156,47 +211,157 @@ class mw_health_bracelet extends EventEmitter {
 
     }
 
-    async AP00_process(raw_payload, socket, client_list_info) {
+    async AP00_process(raw_payload, socket /*, client_list_info*/) {
         // var get_socket = client_list_info.filter(x => (x.remote_client.remoteAddress === socket.remoteAddress
         //     &&x.remote_client.remotePort === socket.remotePort ));
         var self = this;
         var data_formated = await APXX.C2json_AP00(raw_payload);
-        var objIndex = await client_list_info.findIndex(x => (x.remote_client.remoteAddress === socket.remoteAddress
+        var objIndex = await this.client_list_info.findIndex(x => (x.remote_client.remoteAddress === socket.remoteAddress
             && x.remote_client.remotePort === socket.remotePort));
         // console.log(objIndex);
 
         if (objIndex != -1)
-            client_list_info[objIndex].IMEI = data_formated.IMEI;
+            this.client_list_info[objIndex].IMEI = data_formated.IMEI;
         else
             console.log("not have socket");
         // var callback_data = data_to_callback(array_header);
 
         // console.log(JSON.stringify(data_formated));
-        await socket.write(JSON.stringify(data_formated));
+        // await socket.write(JSON.stringify(data_formated));
         //emit connect data_formated
         self.emit("connect", { type: "connect", IMEI: data_formated.IMEI });
+        return data_formated.IMEI;
     }
 
-    async tcp_reply(type,socket)
-    {
-        var response = "IWBP" + type.slice(2,4);
+    async tcp_reply(type, socket) {
+        var response = "IWBP" + type.slice(2, 4) + '#';
         await socket.write(response);
-        return response ;
+        return response;
     }
 
-    async tcp_reply_AP10(type,socket)
-    {
+    async tcp_reply_AP10(type, socket) {
 
         var unicode_raw = "0e2d0e320e040e320e230e270e340e080e310e220e270e340e280e270e010e230e230e210e1b0e230e300e220e380e010e150e4c\
         0e2a0e340e230e340e190e180e23000a00680074007400700073003a002f002f007700770077002e0067006f006f0067006c0065002e0063006f006d002\
         f006d006100700073002f0070006c006100630065002f0e2d0e320e040e320e230e270e340e080e310e220e270e340e280e270e010e230e230e210e1b0e\
         230e300e220e380e010e150e4c0e2a0e340e230e340e190e180e23002f00400037002e0030003000360032003000390039002c003100300030002e00350\
         03000320032003800340032002c00320030007a";
-        var response = "IWBP" + type.slice(2,4) + unicode_raw +'#';
+        var response = "IWBP" + type.slice(2, 4) + unicode_raw + '#';
         await socket.write(response);
-        return response ;
+        return response;
+    }
+    async tcp_reply_AP00(socket) {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let date = today.getDate();
+        let hour = today.getHours();
+        let minute = today.getMinutes();
+        let second = today.getSeconds();
+
+        function toStrFrm(dt_num) {
+            if (dt_num < 10) {
+                return `0${dt_num}`;
+            }
+            else {
+                return `${dt_num}`;
+            }
+        }
+        year = toStrFrm(year);
+        month = toStrFrm(month);
+        date = toStrFrm(date);
+        hour = toStrFrm(hour);
+        minute = toStrFrm(minute);
+        second = toStrFrm(second);
+
+        let dt = `IWBP00,${year}${month}${date}${hour}${minute}${second},7#`;
+
+        await socket.write(dt);
+        return dt;
     }
 
+    async start_monitor_heartrate(IMEI) {
+        var self = this;
+        var journal_no =  self.generate_journal_no
+        var data = 'IWBPXL,' + IMEI + ',' + journal_no + '#';
+        self.write_custom(IMEI, data)
+        return journal_no;
+    }
+
+    async start_monitor_SPO2(IMEI) {
+        var self = this;
+        var journal_no =  self.generate_journal_no
+        var data = 'IWBPXZ,' + IMEI + ',' + journal_no + '#';
+        self.write_custom(IMEI, data)
+        return journal_no;
+    }
+
+    async start_monitor_body_temp(IMEI) {
+        var self = this;
+        var journal_no = self.generate_journal_no
+        var data = 'IWBPXT,' + IMEI + ',' + journal_no + '#';
+        self.write_custom(IMEI, data)
+        return journal_no;
+    }
+    //[sos1,sos2,...]
+    async start_monitor_SOS(IMEI, sos_number) {
+        var self = this;
+        var journal_no =  self.generate_journal_no
+        var data = 'IWBP12,' + IMEI + ',' + journal_no + ',' + sos_number.join(',') + '#';
+        self.write_custom(IMEI, data)
+        return journal_no;
+    }
+
+    // [{phone :"",name: ""},{phone :"",name: ""},...]
+
+    async start_monitor_phonebook(IMEI, phone_list) {
+        var self = this;
+        var journal_no =  self.generate_journal_no
+        var join = [];// Object.values(obj[0]).join(',');
+        for (let index = 0; index < phone_list.length; index++) { // add all sizes to string
+            join[index] = Object.values(phone_list[index]).join('|');
+        };
+        var data = 'IWBP14,' + IMEI + ',' + journal_no + ',' + join.join(',') + '#';
+        self.write_custom(IMEI, data)
+        return journal_no;
+    }
+
+    async start_working_mode(IMEI,mode,mode8_interval_GPS,mode8_flag_GPS) {
+        var self = this;
+        var journal_no = self.generate_journal_no
+        if(mode != 8)
+            var data = 'IWBP33,' + IMEI + ',' + journal_no + ',' + mode.toString() + '#';
+        else
+            var data = 'IWBP33,' + IMEI + ',' + journal_no + ',' + mode.toString() + ',' + mode8_interval_GPS + ',' + mode8_flag_GPS + '#';
+        self.write_custom(IMEI, data)
+        
+        return journal_no;
+    }
+
+
+
+    async write_custom(IMEI, data) {
+        // var self = this;//IWAP00353456789012345#
+        console.log(this.client_list_info)
+        var objIndex = await this.client_list_info.findIndex(x => (x.IMEI === IMEI));
+        if (objIndex == -1) {
+            console.log("IMEI incurrect");
+            return -1;
+        }
+        else {
+            var write = data;
+            this.client_list_info[objIndex].remote_client.write(write);
+            return objIndex;
+        }
+    }
+
+    async find_socket_index(socket) {
+        var objIndex = await this.client_list_info.findIndex(x => (x.remote_client.remoteAddress === socket.remoteAddress
+            && x.remote_client.remotePort === socket.remotePort));
+        return objIndex;
+    }
+
+    generate_journal_no () {return 1000000 * Math.random().toFixed(6);}
 };
 
 
