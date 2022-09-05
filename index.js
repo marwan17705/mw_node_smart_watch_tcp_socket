@@ -5,13 +5,10 @@ test.on('disconnect', (input) => {
     console.log(input);
 });
 test.on('connect', (input) => {
-    
-    console.log(input);
+        console.log(input);
 });
 test.on('data', (input) => {
     console.log(input);
 });
-test.on('response', (input) => {
-    console.log(input);
-});
+
 console.log(test.get_client_list);

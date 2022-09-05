@@ -1,29 +1,9 @@
 <mxfile host="65bd71144e">
     <diagram id="0PrOSCqP3rzMezLKeq9P" name="Page-1">
-        <mxGraphModel dx="1064" dy="1446" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1428" dy="1673" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="5" value="" style="edgeStyle=none;html=1;" parent="1" source="2" target="4" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" value="connection" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="-960" width="120" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="7" value="" style="edgeStyle=none;html=1;" parent="1" source="4" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="340" y="-750" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" value="get socket" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="-840" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="47" value="" style="edgeStyle=none;html=1;" parent="1" source="8" target="46" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="8" value="push socket to list" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="-750" width="120" height="60" as="geometry"/>
-                </mxCell>
                 <mxCell id="26" style="edgeStyle=none;html=1;" parent="1" source="9" target="17" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
@@ -62,44 +42,6 @@
                 </mxCell>
                 <mxCell id="20" value="" style="aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=#ffffff;fontSize=12;spacingTop=3;image;image=img/lib/ibm/users/sensor.svg;fillColor=#1C1F05;" parent="1" vertex="1">
                     <mxGeometry x="325" y="130" width="60" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="51" value="" style="edgeStyle=none;html=1;" parent="1" source="46" target="50" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="46" value="replace index array, ip, port" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="-660" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="50" value="end" style="ellipse;whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="280" y="-560" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="52" value="" style="edgeStyle=none;html=1;" parent="1" source="53" target="55" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="53" value="connection" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="-960" width="120" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="54" value="" style="edgeStyle=none;html=1;" parent="1" source="55" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="550" y="-750" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="55" value="get socket" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="-840" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="56" value="" style="edgeStyle=none;html=1;" parent="1" source="57" target="59" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="57" value="push socket to list" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="-750" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="58" value="" style="edgeStyle=none;html=1;" parent="1" source="59" target="60" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="59" value="insert index array, ip, port" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="-660" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="60" value="end" style="ellipse;whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="-560" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="61" value="server" style="image;html=1;image=img/lib/clip_art/computers/Server_128x128.png" vertex="1" parent="1">
                     <mxGeometry x="500" y="265" width="155" height="150" as="geometry"/>

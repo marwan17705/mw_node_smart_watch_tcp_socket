@@ -55,7 +55,8 @@ class mw_health_bracelet extends EventEmitter {
                 case "AP00":
                     var raw_IMEI = await self.AP00_process(raw_payload, socket, client_list_info);
                     await self.tcp_reply_AP00(socket)
-                    await self.start_monitor_heartrate(raw_IMEI);
+
+
                     break;
                 case "AP01":
                     var data_formated = await APXX.C2json_AP01(raw_payload);
@@ -64,8 +65,19 @@ class mw_health_bracelet extends EventEmitter {
                         break;
                     await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
-                    break;
 
+                    break;
+                case "AP02": //test
+                    // var processHubPromise =self.start_monitor_heartrate(raw_IMEI);
+                    // processHubPromise.then(function(result) {
+                    //     console.log(result)
+                    //     console.log("wait1234")
+
+                    //   // do something with 'result' when complete
+                    // });
+                    console.log(await self.start_monitor_heartrate("123456"))
+
+                    break;
                 case "AP03":
                     var data_formated = await APXX.C2json_AP03(raw_payload);
                     var client_index = await self.find_socket_index(socket);
@@ -110,47 +122,48 @@ class mw_health_bracelet extends EventEmitter {
                     await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
                     break;
+
                 case "APXL":
                     var data_formated = await APXX.C2json_APXL(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 case "APXZ":
                     var data_formated = await APXX.C2json_APXZ(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 case "APXT":
                     var data_formated = await APXX.C2json_APXT(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 case "AP12":
                     var data_formated = await APXX.C2json_AP12(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 case "AP14":
                     var data_formated = await APXX.C2json_AP14(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 case "AP33":
                     var data_formated = await APXX.C2json_AP33(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("response", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit(data_formated.journal_no, { type: type, payload: data_formated, socket_index: client_index });
                     break;
                 default:
                     // var data_formated = location_update_to_json(array_payload);
@@ -282,60 +295,133 @@ class mw_health_bracelet extends EventEmitter {
 
     async start_monitor_heartrate(IMEI) {
         var self = this;
-        var journal_no =  self.generate_journal_no
+        var journal_no =  self.generate_journal_no()
         var data = 'IWBPXL,' + IMEI + ',' + journal_no + '#';
         self.write_custom(IMEI, data)
-        return journal_no;
+        console.log(journal_no)
+        // var promise = Promise.resolve();
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
+
     }
 
     async start_monitor_SPO2(IMEI) {
         var self = this;
-        var journal_no =  self.generate_journal_no
+        var journal_no =  self.generate_journal_no()
         var data = 'IWBPXZ,' + IMEI + ',' + journal_no + '#';
         self.write_custom(IMEI, data)
-        return journal_no;
+        // return journal_no;
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
     }
 
     async start_monitor_body_temp(IMEI) {
         var self = this;
-        var journal_no = self.generate_journal_no
+        var journal_no = self.generate_journal_no()
         var data = 'IWBPXT,' + IMEI + ',' + journal_no + '#';
         self.write_custom(IMEI, data)
-        return journal_no;
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
     }
     //[sos1,sos2,...]
-    async start_monitor_SOS(IMEI, sos_number) {
+    async send_alert_SOS(IMEI, sos_number) {
         var self = this;
-        var journal_no =  self.generate_journal_no
+        var journal_no =  self.generate_journal_no()
         var data = 'IWBP12,' + IMEI + ',' + journal_no + ',' + sos_number.join(',') + '#';
         self.write_custom(IMEI, data)
-        return journal_no;
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
     }
 
     // [{phone :"",name: ""},{phone :"",name: ""},...]
+//แก้ เป็น unicode 
 
-    async start_monitor_phonebook(IMEI, phone_list) {
+    async create_phonebook(IMEI, phone_list) {
         var self = this;
-        var journal_no =  self.generate_journal_no
+        var journal_no =  self.generate_journal_no()
         var join = [];// Object.values(obj[0]).join(',');
         for (let index = 0; index < phone_list.length; index++) { // add all sizes to string
-            join[index] = Object.values(phone_list[index]).join('|');
+            phone_list[index].contact_name = toUnicode(phone_list[index].contact_name);
+            join[index] = phone_list[index].contact_name + "|" +phone_list[index].phone_num
+            // Object.values(phone_list[index]).join('|');
         };
         var data = 'IWBP14,' + IMEI + ',' + journal_no + ',' + join.join(',') + '#';
         self.write_custom(IMEI, data)
-        return journal_no;
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
     }
 
-    async start_working_mode(IMEI,mode,mode8_interval_GPS,mode8_flag_GPS) {
+    async setting_working_mode(IMEI,mode,mode8_interval_GPS,mode8_flag_GPS) {
         var self = this;
-        var journal_no = self.generate_journal_no
+        var journal_no = self.generate_journal_no()
         if(mode != 8)
             var data = 'IWBP33,' + IMEI + ',' + journal_no + ',' + mode.toString() + '#';
         else
             var data = 'IWBP33,' + IMEI + ',' + journal_no + ',' + mode.toString() + ',' + mode8_interval_GPS + ',' + mode8_flag_GPS + '#';
         self.write_custom(IMEI, data)
         
-        return journal_no;
+        return new Promise(function(resolve) {
+            var timeout = 10000;
+            setTimeout(() => {
+                self.removeAllListeners(journal_no);
+                resolve({type : 'error' , info : 'timeout'});
+            }, timeout);
+
+            self.on(journal_no, async function  (data){
+                self.removeAllListeners(journal_no);
+                resolve(data);
+            })
+        });
     }
 
 
@@ -361,7 +447,21 @@ class mw_health_bracelet extends EventEmitter {
         return objIndex;
     }
 
-    generate_journal_no () {return 1000000 * Math.random().toFixed(6);}
+    generate_journal_no () {
+        var number = 1000000 * Math.random().toFixed(6);
+        return ("000000" + number.toString()).substr(-6)
+    }
+
+    toUnicode(str) {
+        return str.split('').map(function (value, index, array) {
+            var temp = value.charCodeAt(0).toString(16).padStart(4, '0');
+            if (temp.length > 2) {
+                return /*'\\u' + */temp;
+            }
+            return value;
+        }).join('');
+    }
+    
 };
 
 

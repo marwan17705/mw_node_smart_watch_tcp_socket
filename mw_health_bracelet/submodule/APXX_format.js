@@ -9,20 +9,21 @@ class APXX_format {
         };
     };
 
+
     C2json_AP01(data) {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
             date: a_data[0].substring(6, 12),
             GPS_state: a_data[0].substring(12, 13),
-            lat: {
+            lat_ddm: {
                 degree: a_data[0].substring(13, 15),
-                point: a_data[0].substring(15, 22),
+                minutes: a_data[0].substring(15, 22),
                 direction: a_data[0].substring(22, 23),
             },
-            long: {
+            long_ddm: {
                 degree: a_data[0].substring(23, 26),
-                point: a_data[0].substring(26, 33),
+                minutes: a_data[0].substring(26, 33),
                 direction: a_data[0].substring(33, 34),
             },
             speed: a_data[0].substring(34, 39),
@@ -41,6 +42,10 @@ class APXX_format {
             CID: a_data[4],
             wifi_info: []
         };
+    // DD = Degrees + Decimal minutes / 60
+        json.lat = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
+        json.long = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
+
         a_data[5] = a_data[5].slice(0, -1)
         var a_wifi = a_data[5].split('&')
         for (let index = 0; index < a_wifi.length; index++) {
@@ -136,14 +141,14 @@ class APXX_format {
             type: a_data[0].substring(2, 6),
             date: a_data[0].substring(6, 12),
             GPS_state: a_data[0].substring(12, 13),
-            lat: {
+            lat_ddm: {
                 degree: a_data[0].substring(13, 15),
-                point: a_data[0].substring(15, 22),
+                minutes: a_data[0].substring(15, 22),
                 direction: a_data[0].substring(22, 23),
             },
-            long: {
+            long_ddm: {
                 degree: a_data[0].substring(23, 26),
-                point: a_data[0].substring(26, 33),
+                minutes: a_data[0].substring(26, 33),
                 direction: a_data[0].substring(33, 34),
             },
             speed: a_data[0].substring(34, 39),
@@ -167,6 +172,9 @@ class APXX_format {
             mobile_hyperlink_is_contained: parseInt(a_data[7]) % 10,
             wifi_info: []
         };
+        json.lat = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
+        json.long = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
+
         var a_wifi = a_data[8].split('&')
         for (let index = 0; index < a_wifi.length; index++) {
             var a_info = a_wifi[index].split('|');
