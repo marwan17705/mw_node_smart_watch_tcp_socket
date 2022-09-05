@@ -17,29 +17,29 @@ class APXX_format {
             date: a_data[0].substring(6, 12),
             GPS_state: a_data[0].substring(12, 13),
             lat_ddm: {
-                degree: a_data[0].substring(13, 15),
-                minutes: a_data[0].substring(15, 22),
-                direction: a_data[0].substring(22, 23),
+                degree: parseInt(a_data[0].substring(13, 15)),
+                minutes: parseInt(a_data[0].substring(15, 22)),
+                direction: parseInt(a_data[0].substring(22, 23)),
             },
             long_ddm: {
-                degree: a_data[0].substring(23, 26),
-                minutes: a_data[0].substring(26, 33),
-                direction: a_data[0].substring(33, 34),
+                degree: parseInt(a_data[0].substring(23, 26)),
+                minutes: parseInt(a_data[0].substring(26, 33)),
+                direction: parseInt(a_data[0].substring(33, 34)),
             },
-            speed: a_data[0].substring(34, 39),
+            speed: parseInt(a_data[0].substring(34, 39)),
             time: a_data[0].substring(39, 45),
-            direction_angle: a_data[0].substring(45, 51),
-            gsm_signal: a_data[0].substring(51, 54),
-            num_sat: a_data[0].substring(54, 57),
-            batt_level: a_data[0].substring(57, 60),
+            direction_angle: parseInt(a_data[0].substring(45, 51)),
+            gsm_signal: parseInt(a_data[0].substring(51, 54)),
+            num_sat: parseInt(a_data[0].substring(54, 57)),
+            batt_level: parseInt(a_data[0].substring(57, 60)),
             remaining_space: a_data[0].substring(60, 61),
             fortification_state: a_data[0].substring(61, 63),
             working_mode: a_data[0].substring(63, 65),
             // LBS,
-            mcc: a_data[1],
-            mnc: a_data[2],
-            lac: a_data[3],
-            cid: a_data[4],
+            mcc: parseInt(a_data[1]),
+            mnc: parseInt(a_data[2]),
+            lac: parseInt(a_data[3]),
+            cid: parseInt(a_data[4]),
             wifi: []
         };
     // DD = Degrees + Decimal minutes / 60
@@ -53,7 +53,7 @@ class APXX_format {
             json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
-                rssi: a_info[2],
+                rssi: parseInt(a_info[2]),
 
             }
         }
@@ -65,10 +65,10 @@ class APXX_format {
         var json = {
             type: a_data[0].substring(2, 6),
             language_notice: a_data[1],
-            reply_flag: a_data[2],
+            reply_flag: parseInt(a_data[2]),
             sets_of_bases: parseInt(a_data[3]),
-            mcc: a_data[4],
-            mnc: a_data[5],
+            mcc: parseInt(a_data[4]),
+            mnc: parseInt(a_data[5]),
             base_info: [],
             sets_of_wifi: 0,
             wifi: []
@@ -76,9 +76,9 @@ class APXX_format {
         for (let index = 0; index < json.sets_of_bases; index++) {
             var a_info = a_data[6 + index].split('|');
             json["base_info"][index] = {
-                lac: a_info[0],
-                cid: a_info[1],
-                rssi: a_info[2],
+                lac: parseInt(a_info[0]),
+                cid: parseInt(a_info[1]),
+                rssi: parseInt(a_info[2]),
 
             }
             // json["base_info"][index] = a_data[6 + index]
@@ -91,7 +91,7 @@ class APXX_format {
             json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
-                rssi: a_info[2],
+                rssi: parseInt(a_info[2]),
 
             }
         }
@@ -102,18 +102,18 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            gsm_signal: a_data[1].substring(0, 3),
-            num_sat: a_data[1].substring(3, 6),
-            batt_level: a_data[1].substring(6, 9),
+            gsm_signal: parseInt(a_data[1].substring(0, 3)),
+            num_sat: parseInt(a_data[1].substring(3, 6)),
+            batt_level: parseInt(a_data[1].substring(6, 9)),
             remaining_space: a_data[1].substring(9, 10),
             fortification_state:
             {
-                device_is_invalid: a_data[1][10],
-                night_light: a_data[1][11],
+                device_is_invalid: parseInt(a_data[1][10]),
+                night_light: parseInt(a_data[1][11]),
             },
             working_mode: a_data[1].substring(12, 14),
-            counting_step: a_data[2],
-            rolls_frequency: a_data[3],
+            counting_step: parseInt(a_data[2]),
+            rolls_frequency: parseInt(a_data[3]),
         };
 
 
@@ -125,7 +125,7 @@ class APXX_format {
         var json = {
             type: a_data[0].substring(2, 6),
             datetime: a_data[1],
-            number_of_audio_data: parseInt(a_data[2]),
+            number_of_audio_data: parseInt(parseInt(a_data[2])),
             sequence: parseInt(a_data[3]),
             length: parseInt(a_data[4]),
             data: a_data[5],
@@ -143,29 +143,29 @@ class APXX_format {
             date: a_data[0].substring(6, 12),
             GPS_state: a_data[0].substring(12, 13),
             lat_ddm: {
-                degree: a_data[0].substring(13, 15),
-                minutes: a_data[0].substring(15, 22),
-                direction: a_data[0].substring(22, 23),
+                degree: parseInt(a_data[0].substring(13, 15)),
+                minutes: parseInt(a_data[0].substring(15, 22)),
+                direction: parseInt(a_data[0].substring(22, 23)),
             },
             long_ddm: {
-                degree: a_data[0].substring(23, 26),
-                minutes: a_data[0].substring(26, 33),
-                direction: a_data[0].substring(33, 34),
+                degree: parseInt(a_data[0].substring(23, 26)),
+                minutes:parseInt( a_data[0].substring(26, 33)),
+                direction: parseInt(a_data[0].substring(33, 34)),
             },
-            speed: a_data[0].substring(34, 39),
+            speed: parseInt(a_data[0].substring(34, 39)),
             time: a_data[0].substring(39, 45),
-            direction_angle: a_data[0].substring(45, 51),
-            gsm_signal: a_data[0].substring(51, 54),
-            num_sat: a_data[0].substring(54, 57),
-            batt_level: a_data[0].substring(57, 60),
+            direction_angle: parseInt(a_data[0].substring(45, 51)),
+            gsm_signal: parseInt(a_data[0].substring(51, 54)),
+            num_sat: parseInt(a_data[0].substring(54, 57)),
+            batt_level: parseInt(a_data[0].substring(57, 60)),
             remaining_space: a_data[0].substring(60, 61),
             fortification_state: a_data[0].substring(61, 63),
             working_mode: a_data[0].substring(63, 65),
             // LBS,
-            mcc: a_data[1],
-            mnc: a_data[2],
-            lac: a_data[3],
-            cid: a_data[4],
+            mcc: parseInt(a_data[1]),
+            mnc: parseInt(a_data[2]),
+            lac: parseInt(a_data[3]),
+            cid: parseInt(a_data[4]),
             alarm_state: self.map_num2SOS(a_data[5]),
             //need alarm_state 00 is alarm state,00 is no alarm (01：SOS,02：low battery,06：fall down alarm,04:wearing notice)
             language: a_data[6],
@@ -182,7 +182,7 @@ class APXX_format {
             json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
-                rssi: a_info[2],
+                rssi: parseInt(a_info[2]),
 
             }
 
@@ -196,7 +196,7 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            heart_rate: a_data[1],
+            heart_rate: parseInt(a_data[1]),
         };
 
         return json;
@@ -208,8 +208,8 @@ class APXX_format {
             type: a_data[0].substring(2, 6),
             heart_rate: a_data[1],
             bp: {
-                systolic: a_data[2],
-                diastolic: a_data[3],
+                systolic: parseInt(a_data[2]),
+                diastolic: parseInt(a_data[3]),
             }
         };
 
@@ -220,13 +220,13 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            heart_rate: a_data[1],
+            heart_rate: parseInt(a_data[1]),
             bp: {
-                systolic: a_data[2],
-                diastolic: a_data[3],
+                systolic: parseInt(a_data[2]),
+                diastolic: parseInt(a_data[3]),
             },
-            blood_oxygen: a_data[4],
-            blood_sugar: a_data[5],
+            blood_oxygen:parseInt( a_data[4]),
+            blood_sugar: parseInt(a_data[5]),
 
 
         };
@@ -238,7 +238,7 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            body_temperature: a_data[1],
+            body_temperature: parseInt(a_data[1]),
             batt_level: a_data[2],
 
 
