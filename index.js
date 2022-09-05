@@ -1,5 +1,5 @@
 const smart_watch = require('./mw_health_bracelet/mw_health_bracelet');
-const test = new smart_watch(40030);
+const test = new smart_watch(40020);
 
 test.on('disconnect', (input) => {
     console.log(input);

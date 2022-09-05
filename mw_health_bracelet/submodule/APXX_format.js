@@ -28,29 +28,29 @@ class APXX_format {
             },
             speed: a_data[0].substring(34, 39),
             time: a_data[0].substring(39, 45),
-            direction: a_data[0].substring(45, 51),
-            GSM_signal: a_data[0].substring(51, 54),
-            satellites_number: a_data[0].substring(54, 57),
-            battery_level: a_data[0].substring(57, 60),
+            direction_angle: a_data[0].substring(45, 51),
+            gsm_signal: a_data[0].substring(51, 54),
+            num_sat: a_data[0].substring(54, 57),
+            batt_level: a_data[0].substring(57, 60),
             remaining_space: a_data[0].substring(60, 61),
             fortification_state: a_data[0].substring(61, 63),
             working_mode: a_data[0].substring(63, 65),
             // LBS,
-            MCC: a_data[1],
-            MNC: a_data[2],
-            LAC: a_data[3],
-            CID: a_data[4],
-            wifi_info: []
+            mcc: a_data[1],
+            mnc: a_data[2],
+            lac: a_data[3],
+            cid: a_data[4],
+            wifi: []
         };
     // DD = Degrees + Decimal minutes / 60
-        json.lat = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
-        json.long = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
+        json.latitude = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
+        json.longitude = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
 
         a_data[5] = a_data[5].slice(0, -1)
         var a_wifi = a_data[5].split('&')
         for (let index = 0; index < a_wifi.length; index++) {
             var a_info = a_wifi[index].split('|');
-            json["wifi_info"][index] = {
+            json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
                 rssi: a_info[2],
@@ -67,28 +67,28 @@ class APXX_format {
             language_notice: a_data[1],
             reply_flag: a_data[2],
             sets_of_bases: parseInt(a_data[3]),
-            MCC: a_data[4],
-            MNC: a_data[5],
+            mcc: a_data[4],
+            mnc: a_data[5],
             base_info: [],
             sets_of_wifi: 0,
-            wifi_info: []
+            wifi: []
         };
         for (let index = 0; index < json.sets_of_bases; index++) {
             var a_info = a_data[6 + index].split('|');
             json["base_info"][index] = {
-                LAC: a_info[0],
-                CID: a_info[1],
+                lac: a_info[0],
+                cid: a_info[1],
                 rssi: a_info[2],
 
             }
             // json["base_info"][index] = a_data[6 + index]
         }
-        // json["wifi_info"] = a_data
+        // json["wifi"] = a_data
         json.sets_of_wifi = parseInt(a_data[6 + json.sets_of_bases]);
         var a_wifi = a_data[7 + json.sets_of_bases].split('&')
         for (let index = 0; index < a_wifi.length; index++) {
             var a_info = a_wifi[index].split('|');
-            json["wifi_info"][index] = {
+            json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
                 rssi: a_info[2],
@@ -102,9 +102,9 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            GSM_signal: a_data[1].substring(0, 3),
-            satellites_number: a_data[1].substring(3, 6),
-            battery_level: a_data[1].substring(6, 9),
+            gsm_signal: a_data[1].substring(0, 3),
+            num_sat: a_data[1].substring(3, 6),
+            batt_level: a_data[1].substring(6, 9),
             remaining_space: a_data[1].substring(9, 10),
             fortification_state:
             {
@@ -112,7 +112,7 @@ class APXX_format {
                 night_light: a_data[1][11],
             },
             working_mode: a_data[1].substring(12, 14),
-            counting_steps: a_data[2],
+            counting_step: a_data[2],
             rolls_frequency: a_data[3],
         };
 
@@ -136,6 +136,7 @@ class APXX_format {
     };
 
     C2json_AP10(data) {
+        var self = this;
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
@@ -153,40 +154,40 @@ class APXX_format {
             },
             speed: a_data[0].substring(34, 39),
             time: a_data[0].substring(39, 45),
-            direction: a_data[0].substring(45, 51),
-            GSM_signal: a_data[0].substring(51, 54),
-            satellites_number: a_data[0].substring(54, 57),
-            battery_level: a_data[0].substring(57, 60),
+            direction_angle: a_data[0].substring(45, 51),
+            gsm_signal: a_data[0].substring(51, 54),
+            num_sat: a_data[0].substring(54, 57),
+            batt_level: a_data[0].substring(57, 60),
             remaining_space: a_data[0].substring(60, 61),
             fortification_state: a_data[0].substring(61, 63),
             working_mode: a_data[0].substring(63, 65),
             // LBS,
-            MCC: a_data[1],
-            MNC: a_data[2],
-            LAC: a_data[3],
-            CID: a_data[4],
-            alarm_state: a_data[5],
-
+            mcc: a_data[1],
+            mnc: a_data[2],
+            lac: a_data[3],
+            cid: a_data[4],
+            alarm_state: self.map_num2SOS(a_data[5]),
+            //need alarm_state 00 is alarm state,00 is no alarm (01：SOS,02：low battery,06：fall down alarm,04:wearing notice)
             language: a_data[6],
             flag_reply: parseInt(parseInt(a_data[7]) / 10),
             mobile_hyperlink_is_contained: parseInt(a_data[7]) % 10,
-            wifi_info: []
+            wifi: []
         };
-        json.lat = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
-        json.long = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
+        json.latitude = parseInt(json.lat_ddm.degree) + parseInt(json.lat_ddm.minutes)/60;
+        json.longitude = parseInt(json.long_ddm.degree) + parseInt(json.long_ddm.minutes)/60;
 
         var a_wifi = a_data[8].split('&')
         for (let index = 0; index < a_wifi.length; index++) {
             var a_info = a_wifi[index].split('|');
-            json["wifi_info"][index] = {
+            json["wifi"][index] = {
                 ssid: a_info[0],
                 mac: a_info[1],
                 rssi: a_info[2],
 
             }
 
-            // json["wifi_info"][index] = a_info
-            // json["wifi_info"][index] = a_wifi[index]
+            // json["wifi"][index] = a_info
+            // json["wifi"][index] = a_wifi[index]
         }
         return json;
     };
@@ -224,7 +225,7 @@ class APXX_format {
                 systolic: a_data[2],
                 diastolic: a_data[3],
             },
-            SPO2: a_data[4],
+            blood_oxygen: a_data[4],
             blood_sugar: a_data[5],
 
 
@@ -237,8 +238,8 @@ class APXX_format {
         var a_data = data.split(',');
         var json = {
             type: a_data[0].substring(2, 6),
-            body_temp: a_data[1],
-            battery_level: a_data[2],
+            body_temperature: a_data[1],
+            batt_level: a_data[2],
 
 
         };
@@ -468,7 +469,26 @@ class APXX_format {
 
         return json;
     }
-
+    //need alarm_state 00 is alarm state,00 is no alarm (01：SOS,02：low battery,06：fall down alarm,04:wearing notice)
+    map_num2SOS(num)
+    {
+        switch (num) {
+            case '00':
+                return 'no_alarm'
+            case '01':
+                return 'SOS'
+            case '02':
+                return 'low_battery'
+            case '04':
+                return 'wearing_notice'
+            case '06':
+                return 'fall_down'
+            case '96':
+                return 'fall_down_detect'
+            default:
+                return 'unknow';
+        }
+    }
 }
 
 module.exports = APXX_format;

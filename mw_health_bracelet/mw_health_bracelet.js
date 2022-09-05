@@ -53,7 +53,7 @@ class mw_health_bracelet extends EventEmitter {
             // console.log(type);
             switch (type) {
                 case "AP00":
-                    var raw_IMEI = await self.AP00_process(raw_payload, socket, client_list_info);
+                    /*var raw_IMEI =*/ await self.AP00_process(raw_payload, socket, client_list_info);
                     await self.tcp_reply_AP00(socket)
 
 
@@ -63,27 +63,28 @@ class mw_health_bracelet extends EventEmitter {
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "up_location", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
 
                     break;
-                case "AP02": //test
-                    // var processHubPromise =self.start_monitor_heartrate(raw_IMEI);
-                    // processHubPromise.then(function(result) {
-                    //     console.log(result)
-                    //     console.log("wait1234")
 
-                    //   // do something with 'result' when complete
-                    // });
-                    console.log(await self.start_monitor_heartrate("123456"))
+                // case "AP02": //test
+                //     // var processHubPromise =self.start_monitor_heartrate(raw_IMEI);
+                //     // processHubPromise.then(function(result) {
+                //     //     console.log(result)
+                //     //     console.log("wait1234")
 
-                    break;
+                //     //   // do something with 'result' when complete
+                //     // });
+                //     console.log(await self.start_monitor_heartrate("123456"))
+
+                //     break;
                 case "AP03":
                     var data_formated = await APXX.C2json_AP03(raw_payload);
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "general_info", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
                     break;
 
@@ -92,7 +93,7 @@ class mw_health_bracelet extends EventEmitter {
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "alarm", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply_AP10(type, socket);
                     break;
 
@@ -101,7 +102,7 @@ class mw_health_bracelet extends EventEmitter {
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "up_body_temp", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
                     break;
 
@@ -110,7 +111,7 @@ class mw_health_bracelet extends EventEmitter {
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "up_spo2", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
                     break;
 
@@ -119,7 +120,7 @@ class mw_health_bracelet extends EventEmitter {
                     var client_index = await self.find_socket_index(socket);
                     if (client_index === -1)
                         break;
-                    await self.emit("data", { type: type, payload: data_formated, IMEI: client_list_info[client_index].IMEI });
+                    await self.emit("data", { type: "up_hr_bp", payload: data_formated, IMEI: client_list_info[client_index].IMEI });
                     await self.tcp_reply(type, socket);
                     break;
 
